@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+template <typename type>
+class list {
+protected:
+    vector<type> arr;
+    int maxsize;
+    int currentSize;
+
+public:
+    virtual void addElementatfirstindex(type) = 0;
+    virtual void addElementatlastindex(type) = 0;
+    virtual type removeElementfromend() = 0;
+    virtual void removeElementfromstart() = 0;
+};
+
+template <typename type>
+class mylist : public list<type> {
+public:
+    // Constructor with default value
+    mylist(type* arr1, int max = 5, int cs = 0) {
+        this->maxsize = max;
+        this->currentSize = cs;
+        for (int i = 0; i < this->maxsize; i++) {
+            this->arr.push_back(arr1[i]);
+        }
+    }
+
+    void addElementatfirstindex(type num) override {
+        this->arr.insert(this->arr.begin(), num);
+        for (auto i : this->arr)
+            cout << i << " ";
+        cout << endl;
+    }
+
+    void addElementatlastindex(type num2) override {
+        this->arr.push_back(num2);
+        for (auto i : this->arr)
+            cout << i << " ";
+        cout << endl;
+    }
+
+    type removeElementfromend() override {
+        type lastElement = this->arr.back();
+        this->arr.pop_back();
+        for (auto i : this->arr)
+            cout << i << " ";
+        cout << endl;
+        return lastElement;
+    }
+
+    void removeElementfromstart() override {
+        this->arr.erase(this->arr.begin());
+        for (auto i : this->arr)
+            cout << i << " ";
+        cout << endl;
+    }
+
+    // Destructor
+    ~mylist() {
+        // No need to delete arr as it is a vector
+    }
+};
+
+int main() {
+    int arr[] = { 1, 2, 3, 50, 60 };
+    mylist<int> l1(arr);
+    l1.addElementatfirstindex(10);
+    l1.addElementatlastindex(70);
+    l1.removeElementfromend();
+    l1.removeElementfromstart();
+
+    return 0;
+}
