@@ -1,0 +1,221 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+template <typename type>
+class list {
+protected:
+	vector<type> arr;
+	int maxsize;
+	int currentSize;
+
+public:
+	virtual void addElementatfirstindex(type) = 0;
+	virtual void addElementatlastindex(type) = 0;
+	virtual type removeElementfromend() = 0;
+	virtual void removeElementfromstart() = 0;
+	virtual bool empty() = 0;
+	virtual bool full() = 0;
+	virtual int size() = 0;
+	virtual bool insertAt(int index, type value) = 0;
+	virtual type last() = 0;
+	virtual bool search(type value) = 0;
+};
+
+template <typename type>
+class mylist : public list<type> {
+public:
+	// Constructor with default value
+	mylist(type* arr1 = nullptr, int max = 5, int cs = 0) {
+		this->maxsize = max;
+		this->currentSize = cs;
+		if (arr1 != nullptr) {
+			for (int i = 0; i < this->maxsize; i++) {
+				this->arr.push_back(arr1[i]);
+			}
+		}
+	}
+
+	// Copy Constructor
+	mylist(const mylist& other) {
+		this->arr = other.arr;
+		this->maxsize = other.maxsize;
+		this->currentSize = other.currentSize;
+	}
+
+	void addElementatfirstindex(type num) override {
+		if (this->currentSize < this->maxsize) {
+			this->arr.insert(this->arr.begin(), num);
+			this->currentSize++;
+		}
+		else {
+			cout << "List is full. Cannot add element." << endl;
+		}
+	}
+
+	void addElementatlastindex(type num2) override {
+		if (this->currentSize < this->maxsize) {
+			this->arr.push_back(num2);
+			this->currentSize++;
+		}
+		else {
+			cout << "List is full. Cannot add element." << endl;
+		}
+	}
+
+	type removeElementfromend() override {
+		if (!this->arr.empty()) {
+			type lastElement = this->arr.back();
+			this->arr.pop_back();
+			this->currentSize--;
+			return lastElement;
+		}
+		else {
+			cout << "List is empty. Cannot remove element." << endl;
+			return type();
+		}
+	}
+
+	void removeElementfromstart() override {
+		if (!this->arr.empty()) {
+			this->arr.erase(this->arr.begin());
+			this->currentSize--;
+		}
+		else {
+			cout << "List is empty. Cannot remove element." << endl;
+		}
+	}
+
+	bool empty() override {
+		return this->arr.empty();
+	}
+
+	bool full() override {
+		return this->currentSize == this->maxsize;
+	}
+
+	int size() override {
+		return this->arr.size();
+	}
+
+	bool insertAt(int index, type value) override {
+		if (index >= 0 && index <= this->currentSize && this->currentSize < this->maxsize) {
+			this->arr.insert(this->arr.begin() + index, value);
+			this->currentSize++;
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	type last() override {
+		if (!this->arr.empty()) {
+			return this->arr.back();
+		}
+		else {
+			cout << "List is empty." << endl;
+			return type();
+		}
+	}
+
+	bool search(type value) override {
+		for (auto i : this->arr) {
+			if (i == value) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// Destructor
+	~mylist() {
+		// No need to delete arr as it is a vector
+	}
+
+	void display() {
+		for (auto i : this->arr) {
+			cout << i << " ";
+		}
+		cout << endl;
+	}
+};
+
+int main() {
+	int arr[] = { 1, 2, 3, 50, 60 };
+	mylist<int> l1(arr);
+	int choice, value, index;
+
+	while (true) {
+		cout << "Menu:" << endl;
+		cout << "1. Add element at first index" << endl;
+		cout << "2. Add element at last index" << endl;
+		cout << "3. Remove element from end" << endl;
+		cout << "4. Remove element from start" << endl;
+		cout << "5. Check if list is empty" << endl;
+		cout << "6. Check if list is full" << endl;
+		cout << "7. Get current size of list" << endl;
+		cout << "8. Insert element at specific index" << endl;
+		cout << "9. Get last element" << endl;
+		cout << "10. Search for an element" << endl;
+		cout << "11. Display list" << endl;
+		cout << "12. Exit" << endl;
+		cout << "Enter your choice: ";
+		cin >> choice;
+
+		switch (choice) {
+		case 1:
+			cout << "Enter value to add at first index: ";
+			cin >> value;
+			l1.addElementatfirstindex(value);
+			break;
+		case 2:
+			cout << "Enter value to add at last index: ";
+			cin >> value;
+			l1.addElementatlastindex(value);
+			break;
+		case 3:
+			l1.removeElementfromend();
+			break;
+		case 4:
+			l1.removeElementfromstart();
+			break;
+		case 5:
+			cout << "Is list empty? " << (l1.empty() ? "Yes" : "No") << endl;
+			break;
+		case 6:
+			cout << "Is list full? " << (l1.full() ? "Yes" : "No") << endl;
+			break;
+		case 7:
+			cout << "Current size of list: " << l1.size() << endl;
+			break;
+		case 8:
+			cout << "Enter index and value to insert: ";
+			cin >> index >> value;
+			if (l1.insertAt(index, value)) {
+				cout << "Element inserted successfully." << endl;
+			}
+			else {
+				cout << "Failed to insert element." << endl;
+			}
+			break;
+		case 9:
+			cout << "Last element: " << l1.last() << endl;
+			break;
+		case 10:
+			cout << "Enter value to search: ";
+			cin >> value;
+			cout << "Is value present? " << (l1.search(value) ? "Yes" : "No") << endl;
+			break;
+		case 11:
+			l1.display();
+			break;
+		case 12:
+			return 0;
+		default:
+			cout << "Invalid choice. Please try again." << endl;
+		}
+	}
+
+	return 0;
+}
