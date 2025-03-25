@@ -91,7 +91,7 @@ public:
 	}
 
 	bool full() override {
-		return this->currentSize == this->maxsize;
+		return this->arr.size() == this->maxsize;
 	}
 
 	int size() override {
